@@ -1,23 +1,23 @@
 # JARVIS Implementation Phases & Milestones
 
-This document is the execution blueprint for building **JARVIS v1: A Personal AI Agent for Ubuntu**, followed by its multi-agent evolution. Each phase has concrete objectives, deliverables, and acceptance criteria.
+This document is the execution blueprint for building **JARVIS v1: A Personal AI Agent for Ubuntu**, followed by its multi-agent evolution. Each phase has concrete objectives, deliverables in `backend/app/`, and acceptance criteria.
 
 ---
 
 ## Roadmap Overview
 
 ```
-Phase 1: Core Foundation, LLM Engine & Memory ──▶ [Deliverable: Conversational CLI with Memory]
+Phase 1: Core Foundation, LLM Engine & Memory ──▶ [Deliverable: Conversational Assistant with Memory]
   │
-Phase 2: Information Retrieval (Search & PDF)  ──▶ [Deliverable: Web Search & PDF Summarizer]
+Phase 2: Information Retrieval (Search & PDF)  ──▶ [Deliverable: Research Agent, Web Search & RAG]
   │
-Phase 3: Ubuntu OS & Safe Terminal Control     ──▶ [Deliverable: App Launcher & HITL Terminal]
+Phase 3: Ubuntu OS & Safe Terminal Control     ──▶ [Deliverable: Computer Agent, App Launcher & HITL]
   │
-Phase 4: Multimodal Voice Pipeline (STT/TTS)   ──▶ [Deliverable: Hands-free Voice Interaction]
+Phase 4: Multimodal Voice Pipeline (STT/TTS)   ──▶ [Deliverable: Voice Services & Hands-free Loop]
   │
-Phase 5: JARVIS v1 Hardening & Validation      ──▶ [Deliverable: Reliable, Tested v1 Assistant]
+Phase 5: JARVIS v1 Hardening & Validation      ──▶ [Deliverable: Reliable, Tested Backend & CLI]
   │
-Phase 6: Multi-Agent Architecture (LangGraph)  ──▶ [Deliverable: Distributed Specialized Agents]
+Phase 6: Multi-Agent Architecture (LangGraph)  ──▶ [Deliverable: Workflows & Planner Agent]
 ```
 
 ---
@@ -25,125 +25,111 @@ Phase 6: Multi-Agent Architecture (LangGraph)  ──▶ [Deliverable: Distribut
 ## Phase 1: Core Foundation, LLM Engine & Memory
 
 ### Objectives
-- Establish a clean, modular Python project structure with environment configuration.
-- Implement an LLM provider abstraction supporting local (Ollama) and cloud APIs (OpenAI, Anthropic, Gemini).
-- Build a persistent conversation store in SQLite (short-term history and cross-session persistence).
-- Provide an interactive terminal CLI interface.
+- Establish configuration management and LLM provider abstraction in `backend/app/core/`.
+- Build persistent SQLite storage in `backend/app/memory/`.
+- Implement conversational persona in `backend/app/agents/assistant.py`.
+- Provide interactive terminal runner / FastAPI server in `backend/app/main.py`.
 
 ### Key Deliverables
-- `jarvis/core/config.py`: Environment variable loading, configuration management.
-- `jarvis/core/llm.py`: Pluggable LLM interface with unified streaming and tool-calling support.
-- `jarvis/memory/database.py`: SQLite schema and manager for sessions, messages, and metadata.
-- `jarvis/memory/manager.py`: Context window management, message trimming, and conversation retrieval.
-- `jarvis/cli/main.py`: Interactive CLI with formatted markdown output.
+- `backend/app/core/config.py`: Environment variable loading via `pydantic-settings`.
+- `backend/app/core/llm.py`: Unified LLM client (Ollama, OpenAI, Anthropic, Gemini).
+- `backend/app/memory/database.py`: SQLite schema and manager for sessions and messages.
+- `backend/app/memory/manager.py`: Context window management and message history trimmer.
+- `backend/app/agents/assistant.py`: Primary conversational assistant logic.
+- `backend/app/main.py`: FastAPI server + interactive CLI mode.
 
 ### Acceptance Criteria
-- [ ] User can initiate a chat session, type messages, and receive natural LLM responses.
-- [ ] User can close the terminal, reopen JARVIS, and resume previous conversations by session ID.
-- [ ] LLM provider can be switched via `.env` without modifying business logic.
+- [ ] User can send prompts and receive natural LLM responses.
+- [ ] Conversation persists to SQLite; restarting session retrieves previous chat history.
+- [ ] LLM provider can be switched seamlessly via `.env`.
 
 ---
 
-## Phase 2: Information Retrieval (Web Search & Local PDF Ingestion)
+## Phase 2: Information Retrieval (Web Search & Local PDF RAG)
 
 ### Objectives
-- Enable JARVIS to query the live internet for up-to-date facts.
-- Enable JARVIS to inspect, read, and summarize local PDF files on Ubuntu.
-- Equip the LLM engine with dynamic function/tool calling.
+- Implement real-time internet search tool in `backend/app/tools/web_search.py`.
+- Build PDF extraction and chunking pipeline in `backend/app/rag/`.
+- Equip `backend/app/agents/research.py` with dynamic tool dispatch.
 
 ### Key Deliverables
-- `jarvis/tools/base.py`: Base tool definition interface with schema generator.
-- `jarvis/tools/web_search.py`: DuckDuckGo / Tavily search integration with snippet and link parsing.
-- `jarvis/tools/pdf_reader.py`: PDF text extraction (PyMuPDF / pypdf), document chunking, and summarizer.
-- `jarvis/core/agent.py`: Agent loop that detects tool calls, dispatches execution, and returns responses.
+- `backend/app/tools/web_search.py`: DuckDuckGo / Tavily search integration.
+- `backend/app/rag/extractor.py`: PDF parser (PyMuPDF / pypdf) and chunker.
+- `backend/app/rag/summarizer.py`: Map-reduce / targeted summarization.
+- `backend/app/agents/research.py`: Agent coordinating searches and document ingestion.
 
 ### Acceptance Criteria
-- [ ] Prompt: *"What is the latest news about Ubuntu 24.04 LTS?"* triggers web search tool and cites sources.
-- [ ] Prompt: *"Summarize the file /path/to/sample.pdf"* parses text and delivers a structured summary.
-- [ ] Tool execution errors are handled gracefully without crashing the chat session.
+- [ ] Prompt: *"What is the latest news about Ubuntu 24.04?"* triggers search tool and cites sources.
+- [ ] Prompt: *"Summarize /path/to/paper.pdf"* outputs concise structured summaries.
+- [ ] Tool execution errors return clean error messages back to LLM.
 
 ---
 
 ## Phase 3: Ubuntu Desktop & Safe System Automation
 
 ### Objectives
-- Enable JARVIS to inspect and launch installed desktop applications on Ubuntu.
-- Provide terminal command execution with strict Human-in-the-Loop (HITL) approval to guarantee safety.
+- Implement Ubuntu application launcher in `backend/app/tools/filesystem.py`.
+- Implement safe terminal execution with Human-in-the-Loop (HITL) approval in `backend/app/tools/terminal.py` and `backend/app/core/safety.py`.
+- Connect actions to `backend/app/agents/computer.py`.
 
 ### Key Deliverables
-- `jarvis/tools/app_manager.py`:
-  - Scans `/usr/share/applications` and `~/.local/share/applications` for `.desktop` files.
-  - Matches requested application names using fuzzy matching.
-  - Launches apps cleanly using `gio launch` or `gtk-launch`.
-- `jarvis/tools/terminal_runner.py`:
-  - Executes shell commands via `subprocess` with timeout and stdout/stderr capture.
-  - Command risk classifier (Safe read-only vs. Modifying state vs. Critical).
-- `jarvis/core/safety.py`:
-  - HITL confirmation prompt displaying command, target path, and risk level.
-  - User can press `[Y]es` / `[N]o` / `[E]dit` before any non-read-only command runs.
+- `backend/app/tools/filesystem.py`: Scans `.desktop` files and launches apps via `gio launch`.
+- `backend/app/tools/terminal.py`: Subprocess runner with timeout and output capture.
+- `backend/app/core/safety.py`: Risk classifier and interactive approval gate.
+- `backend/app/agents/computer.py`: OS operator agent.
 
 ### Acceptance Criteria
-- [ ] Prompt: *"Open Google Chrome"* or *"Launch text editor"* successfully opens the Ubuntu application.
-- [ ] Prompt: *"Check my disk usage"* executes `df -h` and reports free disk space.
-- [ ] Prompt: *"Install htop"* pauses and prompts the user for approval: `[Approve command 'sudo apt install htop'? (y/n)]`.
-- [ ] Rejected commands abort safely with explanatory message back to LLM.
+- [ ] Prompt: *"Open Google Chrome"* fuzzy-matches `.desktop` entry and launches the app.
+- [ ] Prompt: *"Check disk usage"* runs `df -h` and reports free space.
+- [ ] Modifying command (e.g. `sudo apt update`, `rm`, `git`) triggers approval prompt: `[Approve command? (y/n)]`.
+- [ ] Rejected commands abort without executing.
 
 ---
 
 ## Phase 4: Multimodal Voice Interface (Listen & Speak)
 
 ### Objectives
-- Add real-time speech input (STT) and spoken responses (TTS) on Ubuntu.
-- Support both Push-to-Talk (terminal keypress) and Voice Activity Detection (VAD).
+- Build low-latency speech-to-text (STT) and text-to-speech (TTS) services in `backend/app/services/voice/`.
+- Support push-to-talk and voice-driven assistant loop.
 
 ### Key Deliverables
-- `jarvis/voice/stt.py`: Speech-to-Text using `faster-whisper` (local offline) with audio device selection.
-- `jarvis/voice/tts.py`: Text-to-Speech using `piper-tts` or `edge-tts` for high-fidelity spoken output.
-- `jarvis/voice/audio_io.py`: Microphone stream capture, VAD (webrtcvad / silero-vad), and speaker playback.
-- `jarvis/cli/voice_mode.py`: Voice-interactive CLI loop enabling hands-free or push-to-talk conversation.
+- `backend/app/services/voice/stt.py`: Local transcription via `faster-whisper`.
+- `backend/app/services/voice/tts.py`: Speech synthesis via `edge-tts` / `piper`.
+- `backend/app/services/voice/audio_io.py`: Microphone capture and speaker playback.
+- `backend/app/api/voice.py`: WebSocket audio streaming endpoint.
 
 ### Acceptance Criteria
-- [ ] Speaking into the microphone transcribes audio accurately into text.
-- [ ] JARVIS answers with synthesized audio playback while simultaneously printing text to console.
-- [ ] Voice mode supports interrupt/cancel controls.
+- [ ] Spoken microphone input is transcribed into text accurately.
+- [ ] Spoken audio plays back smoothly while text streams to output.
 
 ---
 
-## Phase 5: Reliability Testing & Hardening of JARVIS v1
+## Phase 5: JARVIS v1 Hardening & Validation
 
 ### Objectives
-- Validate end-to-end integration of all 7 core v1 capabilities.
-- Write unit and integration test suites.
-- Optimize response latency and memory footprints.
+- Run end-to-end integration tests across all capabilities.
+- Write test suite in `backend/tests/`.
+- Validate performance on Ubuntu 24.04 LTS.
 
 ### Key Deliverables
-- `tests/test_llm.py`, `tests/test_memory.py`, `tests/test_tools.py`, `tests/test_safety.py`.
-- Automated regression suite checking tool schema generation and command approval logic.
-- Comprehensive user setup guide for Ubuntu dependencies (PulseAudio/PipeWire, libportaudio, system packages).
+- `backend/tests/test_agents.py`, `backend/tests/test_tools.py`, `backend/tests/test_memory.py`.
+- Full health check and self-diagnostic script.
 
 ### Acceptance Criteria
-- [ ] Full end-to-end run passing all capability tests on Ubuntu.
-- [ ] Zero crash states on invalid tool inputs or network timeouts.
-- [ ] v1 marked complete and tagged.
+- [ ] 100% passing tests for tool schemas, memory, and security gates.
+- [ ] Stable backend API and terminal CLI.
 
 ---
 
 ## Phase 6: Multi-Agent Architecture Transition
 
 ### Objectives
-- Refactor the single-agent tool loop into a distributed multi-agent graph using **LangGraph**.
-- Separate concerns into specialized agents:
-  - **Supervisor Agent:** Planning, task breakdown, delegation.
-  - **OS & Terminal Agent:** System monitoring, application launching, shell commands.
-  - **Research & Document Agent:** Web search, PDF parsing, information synthesis.
-  - **Voice & Persona Agent:** Natural speech rhythm, tone, and dialogue management.
+- Implement multi-agent collaboration graph in `backend/app/workflows/` using **LangGraph**.
+- Enable `backend/app/agents/planner.py` to supervise `research.py`, `computer.py`, and `assistant.py`.
 
 ### Key Deliverables
-- `jarvis/agents/supervisor.py`: State graph router and task planner.
-- `jarvis/agents/system_agent.py`: Specialist for Ubuntu environment operations.
-- `jarvis/agents/research_agent.py`: Specialist for deep web and document research.
-- `jarvis/agents/state.py`: Global multi-agent state dictionary.
+- `backend/app/workflows/supervisor_graph.py`: LangGraph state chart coordinating sub-tasks.
+- `backend/app/agents/planner.py`: Multi-step task planner.
 
 ### Acceptance Criteria
-- [ ] Multi-step prompts (e.g., *"Search for the latest Linux kernel update, summarize the changelog PDF, and write a summary file to my desktop"*) are decomposed and distributed across specialist agents.
-- [ ] Robust error recovery if one specialist fails.
+- [ ] Complex multi-step queries are decomposed and executed across specialist agents autonomously.
