@@ -11,23 +11,24 @@
 - **Target OS:** Ubuntu Linux (x86_64 / arm64)
 - **Primary Language:** Python 3.12+ / FastAPI / LangGraph
 - **Project Directory:** `/home/abynxv/Projects/jarvis`
-- **Current Milestone:** **Phase 1: Foundation, LLM Engine & Persistent Memory**
-- **Status:** Scaffolding complete; project tree established according to target layout; ready to implement Phase 1.
+- **Current Milestone:** **Week 1: Foundation & LLM Integration (FastAPI + Gemini API)**
+- **Timeline:** 8 Weeks (November 2 – December 31, 2026)
+- **Status:** Scaffolding complete; baseline contracts & docs established; ready to build Week 1 implementation.
 
 ---
 
-## 2. Capability Matrix (v1 Baseline)
+## 2. 8-Week Milestone Matrix
 
-| Capability | Phase | Status | Primary Component |
-| :--- | :---: | :---: | :--- |
-| **1. Natural LLM Chat** | Phase 1 | 🟡 Ready for Dev | `backend/app/core/llm.py` & `backend/app/agents/assistant.py` |
-| **2. Persistent Memory** | Phase 1 | 🟡 Ready for Dev | `backend/app/memory/` (SQLite + Context Manager) |
-| **3. Web Search** | Phase 2 | ⚪ Planned | `backend/app/tools/web_search.py` & `backend/app/agents/research.py` |
-| **4. PDF Reader & Summarizer** | Phase 2 | ⚪ Planned | `backend/app/rag/` (PyMuPDF / RAG extractor) |
-| **5. Ubuntu App Launcher** | Phase 3 | ⚪ Planned | `backend/app/tools/filesystem.py` & `backend/app/agents/computer.py` |
-| **6. Approved Terminal Commands** | Phase 3 | ⚪ Planned | `backend/app/tools/terminal.py` + HITL Approval Gate |
-| **7. Voice (Listen & Speak)** | Phase 4 | ⚪ Planned | `backend/app/services/voice/` (`faster-whisper` + `edge-tts`) |
-| **8. Multi-Agent Architecture** | Phase 6 | ⚪ Planned (v2) | `backend/app/workflows/` & `backend/app/agents/planner.py` (LangGraph) |
+| Week | Milestone | Status | Key Deliverable |
+| :---: | :--- | :---: | :--- |
+| **Week 1** | **LLM + FastAPI Foundation** | 🟡 Active | Working text-based assistant with conversation history |
+| **Week 2** | **Agent & Tool Calling** | ⚪ Planned | Tool registry, ReAct loop, DateTime, Calc, WebSearch tools |
+| **Week 3** | **Persistent Memory** | ⚪ Planned | Database schemas, long-term memory & user preferences |
+| **Week 4** | **RAG & Knowledge Assistant** | ⚪ Planned | Qdrant vector store, PDF ingestion & semantic Q&A |
+| **Week 5** | **Voice Assistant** | ⚪ Planned | Faster-Whisper (STT), Edge-TTS, WebSocket audio stream |
+| **Week 6** | **Ubuntu Desktop Automation** | ⚪ Planned | App launcher (.desktop), safe HITL terminal execution |
+| **Week 7** | **Specialized Agents & LangGraph** | ⚪ Planned | Multi-agent collaboration (Research, Computer, Planner) |
+| **Week 8** | **Testing, Security & Deployment** | ⚪ Planned | Full test suite, Docker Compose, JARVIS V1 Release |
 
 *Status Legend: ⚪ Planned | 🟡 Ready for Dev / In Progress | 🟢 Complete & Verified*
 

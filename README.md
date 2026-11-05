@@ -69,7 +69,9 @@ jarvis/
 
 | Document | Purpose |
 | :--- | :--- |
-| **[PROJECT_STATE.md](file:///home/abynxv/Projects/jarvis/PROJECT_STATE.md)** | **Source of Truth** for agent state, current task, tech stack, and changelog |
+| **[PROJECT_STATE.md](file:///home/abynxv/Projects/jarvis/PROJECT_STATE.md)** | **Source of Truth** for current milestone, capability matrix, and hand-off context |
+| **[DEVELOPMENT_LOG.md](file:///home/abynxv/Projects/jarvis/DEVELOPMENT_LOG.md)** | Daily engineering log: concepts learned, challenges encountered, and daily progress |
+| **[docs/ROADMAP.md](file:///home/abynxv/Projects/jarvis/docs/ROADMAP.md)** | Complete 8-Week (60-Day) development & learning curriculum with weekly deliverables |
 | **[docs/ARCHITECTURE.md](file:///home/abynxv/Projects/jarvis/docs/ARCHITECTURE.md)** | Technical design, data flow diagrams, safety architecture, and voice stack |
-| **[docs/BACKEND_SPEC.md](file:///home/abynxv/Projects/jarvis/docs/BACKEND_SPEC.md)** | Backend internal module contracts, external integrations, and REST/WebSocket API endpoints |
-| **[docs/PHASES.md](file:///home/abynxv/Projects/jarvis/docs/PHASES.md)** | Step-by-step phased roadmap, acceptance tests, and milestone definitions |
+| **[docs/BACKEND_SPEC.md](file:///home/abynxv/Projects/jarvis/docs/BACKEND_SPEC.md)** | Backend module contracts, external integrations, and REST/WebSocket API endpoints |
+| **[docs/PHASES.md](file:///home/abynxv/Projects/jarvis/docs/PHASES.md)** | Phase breakdown and acceptance verification checklists |
