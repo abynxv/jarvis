@@ -13,7 +13,7 @@
 - **Project Directory:** `/home/abynxv/Projects/jarvis`
 - **Current Milestone:** **Week 1: Foundation & LLM Integration (FastAPI + Gemini API)**
 - **Timeline:** 8 Weeks (November 2 – December 31, 2026)
-- **Status:** Scaffolding complete; baseline contracts & docs established; ready to build Week 1 implementation.
+- **Status:** Week 1 Step 1 complete (`backend/app/core/config.py`, `backend/app/core/llm.py`, `.venv`, and core unit tests); ready for SQLite memory & chat endpoint implementation.
 
 ---
 
@@ -86,14 +86,20 @@ jarvis/
 
 ## 5. Next Immediate Steps (Phase 1 Execution)
 
-1. **Core Configuration & Base Models:**
-   - Implement `backend/app/core/config.py` using `pydantic-settings` to load `.env`.
-   - Implement `backend/app/core/llm.py` providing unified client wrapper for Ollama, OpenAI, Anthropic, and Gemini.
+1. **Core Configuration & Base Models (Complete):**
+   - [x] Implement `backend/app/core/config.py` using `pydantic-settings` to load `.env`.
+   - [x] Implement `backend/app/core/llm.py` providing unified client wrapper for Ollama, OpenAI, Anthropic, and Gemini.
 2. **Persistent Conversation Store:**
-   - Implement `backend/app/memory/database.py` for SQLite session and message storage.
-   - Implement `backend/app/memory/manager.py` for context window trimming and session switching.
-3. **Conversational Assistant & CLI Runner:**
-   - Complete `backend/app/agents/assistant.py`.
-   - Provide CLI launcher in `backend/app/cli.py` or terminal REPL.
+   - [ ] Implement `backend/app/memory/database.py` for SQLite session and message storage.
+   - [ ] Implement `backend/app/memory/manager.py` for context window trimming and session switching.
+3. **Conversational Assistant & API/CLI Runner:**
+   - [ ] Complete `backend/app/agents/assistant.py` and add `/api/v1/sessions` + `/api/v1/chat` endpoints.
+   - [ ] Provide CLI launcher in `backend/app/cli.py` or terminal REPL.
 4. **Verification:**
-   - Verify Phase 1 acceptance tests (chatting, session persistence, resumption after restart).
+   - [ ] Verify Phase 1 acceptance tests (chatting, session persistence, resumption after restart).
+
+---
+
+## 6. Changelog & Progress Log
+
+- **2026-11-12:** Set up `.venv` with Week 1 dependencies, implemented [`backend/app/core/config.py`](file:///home/abynxv/Projects/jarvis/backend/app/core/config.py) (`Settings`, `get_settings`) and [`backend/app/core/llm.py`](file:///home/abynxv/Projects/jarvis/backend/app/core/llm.py) (`BaseLLMProvider`, `GeminiProvider`, `OllamaProvider`, `OpenAIProvider`, `AnthropicProvider`, `create_llm_client`), configured `pytest` in [`pyproject.toml`](file:///home/abynxv/Projects/jarvis/pyproject.toml), and verified with 8 unit tests in [`backend/tests/test_core_config_llm.py`](file:///home/abynxv/Projects/jarvis/backend/tests/test_core_config_llm.py).

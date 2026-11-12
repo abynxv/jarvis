@@ -44,9 +44,9 @@ Week 8: Testing, Security, Docker Deployment & Final Integration (JARVIS V1)
 - **Automated Testing:** Pytest and `httpx.AsyncClient` for testing asynchronous endpoints.
 
 ### 🛠️ Implementation Checklist
-- [ ] 1. Configure Python environment & install dependencies (`fastapi`, `uvicorn`, `pydantic-settings`, `google-genai`, `pytest`).
-- [ ] 2. Implement configuration loader (`backend/app/core/config.py`) reading `.env`.
-- [ ] 3. Create Gemini LLM client wrapper (`backend/app/core/llm.py`).
+- [x] 1. Configure Python environment & install dependencies (`fastapi`, `uvicorn`, `pydantic-settings`, `google-genai`, `pytest`).
+- [x] 2. Implement configuration loader (`backend/app/core/config.py`) reading `.env`.
+- [x] 3. Create Gemini LLM client wrapper (`backend/app/core/llm.py`).
 - [ ] 4. Implement in-memory / SQLite conversation history store (`backend/app/memory/manager.py`).
 - [ ] 5. Build `POST /api/v1/chat` endpoint matching contract:
   ```json

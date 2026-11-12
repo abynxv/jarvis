@@ -253,3 +253,4 @@ async def test_openai_and_anthropic_providers_generate():
     assert ant_resp.content == "Claude reply"
     assert ant_resp.usage.total_tokens == 15
     assert ant_resp.finish_reason == "end_turn"
+

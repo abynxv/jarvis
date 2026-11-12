@@ -58,3 +58,4 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     """Return a cached Settings instance (call `.cache_clear()` in tests)."""
     return Settings()
+

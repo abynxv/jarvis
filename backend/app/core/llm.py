@@ -716,3 +716,4 @@ def create_llm_client(settings: Optional[Settings] = None) -> BaseLLMProvider:
     if provider_cls is None:
         raise LLMConfigurationError(f"Unsupported LLM_PROVIDER: {resolved.LLM_PROVIDER}")
     return provider_cls(resolved)
+
